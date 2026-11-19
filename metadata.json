@@ -1,0 +1,6 @@
+{
+  "name": "FlashShare",
+  "description": "High-speed offline local Wi-Fi and hotspot file transfer app for Android-to-Android and Android-to-PC sharing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

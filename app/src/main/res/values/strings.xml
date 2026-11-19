@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">FlashShare</string>
+    <string name="notification_channel_name">File Transfers</string>
+    <string name="notification_channel_description">Shows ongoing and completed offline file transfers</string>
+</resources>

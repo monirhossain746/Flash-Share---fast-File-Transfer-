@@ -1,0 +1,51 @@
+package com.example.ui.theme
+
+import androidx.compose.ui.graphics.Color
+
+// Dark Palette — Electric Conduit
+val DarkBackground = Color(0xFF060E1A)
+val DarkSurface = Color(0xFF0B1628)
+val DarkSurfaceContainer = Color(0xFF102038)
+val DarkSurfaceContainerHigh = Color(0xFF172B49)
+val DarkPrimary = Color(0xFF22D3EE)
+val DarkOnPrimary = Color(0xFF002A33)
+val DarkPrimaryContainer = Color(0xFF064E63)
+val DarkOnPrimaryContainer = Color(0xFFA5F3FC)
+val DarkSecondary = Color(0xFF528BFF)
+val DarkOnSecondary = Color(0xFF041C47)
+val DarkSecondaryContainer = Color(0xFF123370)
+val DarkOnSecondaryContainer = Color(0xFFD6E4FF)
+val DarkTertiary = Color(0xFF2DD4BF)
+val DarkOnTertiary = Color(0xFF002B26)
+val DarkTextPrimary = Color(0xFFEEF5FF)
+val DarkTextSecondary = Color(0xFF94A8C7)
+val DarkOutline = Color(0xFF283E61)
+val DarkError = Color(0xFFFF6B7D)
+
+// Light Palette — Crisp Cobalt & Cyan
+val LightBackground = Color(0xFFF3F7FC)
+val LightSurface = Color(0xFFFFFFFF)
+val LightSurfaceContainer = Color(0xFFEAF1FA)
+val LightSurfaceContainerHigh = Color(0xFFDFEAF7)
+val LightPrimary = Color(0xFF005ED9)
+val LightOnPrimary = Color(0xFFFFFFFF)
+val LightPrimaryContainer = Color(0xFFD6E6FF)
+val LightOnPrimaryContainer = Color(0xFF001C47)
+val LightSecondary = Color(0xFF0097B2)
+val LightOnSecondary = Color(0xFFFFFFFF)
+val LightSecondaryContainer = Color(0xFFCCF3FA)
+val LightOnSecondaryContainer = Color(0xFF002F38)
+val LightTertiary = Color(0xFF0D9488)
+val LightOnTertiary = Color(0xFFFFFFFF)
+val LightTextPrimary = Color(0xFF0B1626)
+val LightTextSecondary = Color(0xFF4F6482)
+val LightOutline = Color(0xFFC8D6EA)
+val LightError = Color(0xFFD32F46)
+
+// Accent gradient stops & semantic statuses
+val FlashCyan = Color(0xFF00E5FF)
+val FlashBlue = Color(0xFF1D6BFF)
+val FlashIndigo = Color(0xFF3949AB)
+val StatusSuccess = Color(0xFF10B981)
+val StatusWarning = Color(0xFFF59E0B)
+val StatusDanger = Color(0xFFEF4444)
