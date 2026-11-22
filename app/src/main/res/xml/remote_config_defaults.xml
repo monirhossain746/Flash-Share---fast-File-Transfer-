@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>app_disabled</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>disable_message</key>
+        <value>Flash Share is currently unavailable due to scheduled maintenance. Please check back soon.</value>
+    </entry>
+    <entry>
+        <key>action_url</key>
+        <value></value>
+    </entry>
+    <entry>
+        <key>force_update</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>latest_version_code</key>
+        <value>1</value>
+    </entry>
+    <entry>
+        <key>latest_version_name</key>
+        <value>1.0.0</value>
+    </entry>
+    <entry>
+        <key>update_message</key>
+        <value>A newer version of Flash Share - Fast File Share is available with performance and security improvements.</value>
+    </entry>
+    <entry>
+        <key>update_url</key>
+        <value>https://github.com/monirhossain746/Flash-Share---fast-File-Transfer-</value>
+    </entry>
+    <entry>
+        <key>apk_download_url</key>
+        <value></value>
+    </entry>
+    <entry>
+        <key>auto_download_update</key>
+        <value>false</value>
+    </entry>
+</defaultsMap>

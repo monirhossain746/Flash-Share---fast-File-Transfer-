@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.flashshare.data.SettingsRepository
 import com.example.flashshare.network.DeviceDiscovery
 import com.example.flashshare.network.NetworkManager
+import com.example.flashshare.remote.RemoteConfigManager
 import com.example.flashshare.server.LocalServer
 import com.example.flashshare.storage.FileManager
 
@@ -13,6 +14,7 @@ class FlashShareContainer private constructor(context: Context) {
   val settingsRepository = SettingsRepository(appContext)
   val fileManager = FileManager(appContext)
   val networkManager = NetworkManager(appContext)
+  val remoteConfigManager = RemoteConfigManager(appContext)
   val transferHistory = TransferHistory(appContext)
   val deviceDiscovery = DeviceDiscovery(appContext, networkManager)
   val transferManager = TransferManager(appContext, fileManager, transferHistory, settingsRepository)

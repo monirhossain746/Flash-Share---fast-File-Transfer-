@@ -22,14 +22,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.OpenInNew
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.PrivacyTip
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Security
 import androidx.compose.material.icons.rounded.SettingsInputAntenna
+import androidx.compose.material.icons.rounded.SystemUpdate
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -52,11 +58,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.example.BuildConfig
+import com.example.flashshare.ads.AdMobConfig
 import com.example.flashshare.model.AppSettings
 import com.example.flashshare.model.ConnectionTestResult
 import com.example.flashshare.model.DuplicateAction
 import com.example.flashshare.model.NetworkInfoState
 import com.example.flashshare.model.ThemePreference
+import com.example.flashshare.remote.AppControlConfig
+import com.example.flashshare.remote.UpdateCheckResult
 import com.example.flashshare.ui.components.MetricPill
 import com.example.flashshare.ui.components.StatusBadge
 import com.example.ui.theme.MonoMetricStyle
@@ -243,6 +253,9 @@ fun NetworkScreen(
 @Composable
 fun SettingsScreen(
   settings: AppSettings,
+  remoteConfig: AppControlConfig,
+  updateCheckState: UpdateCheckResult,
+  useTestAds: Boolean,
   onUpdateDeviceName: (String) -> Unit,
   onUpdatePort: (String) -> Unit,
   onSetDownloadFolder: (Uri) -> Unit,
@@ -252,7 +265,13 @@ fun SettingsScreen(
   onUpdateNotifications: (Boolean) -> Unit,
   onUpdateAutoVerify: (Boolean) -> Unit,
   onUpdateDuplicateAction: (DuplicateAction) -> Unit,
+  onCheckUpdate: () -> Unit,
+  onManualUpdate: () -> Unit,
+  onOpenDeveloperDetails: () -> Unit,
+  onOpenPrivacyPolicy: () -> Unit,
+  onToggleTestAds: (Boolean) -> Unit,
   onClearAllHistory: () -> Unit,
+  showBackButton: Boolean = true,
   onBack: () -> Unit,
 ) {
   BackHandler(onBack = onBack)
@@ -278,8 +297,10 @@ fun SettingsScreen(
       TopAppBar(
         title = { Text("Settings & About") },
         navigationIcon = {
-          IconButton(onClick = onBack, modifier = Modifier.testTag("settings_back_button")) {
-            Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+          if (showBackButton) {
+            IconButton(onClick = onBack, modifier = Modifier.testTag("settings_back_button")) {
+              Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+            }
           }
         },
       )
@@ -462,6 +483,126 @@ fun SettingsScreen(
           }
         }
 
+        // App Update & Remote Config
+        item {
+          val isCheckingUpdate = updateCheckState is UpdateCheckResult.Checking
+          Card(
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+            modifier = Modifier.fillMaxWidth(),
+          ) {
+            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+              Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Rounded.SystemUpdate, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("App Update", style = MaterialTheme.typography.titleMedium)
+              }
+              Text(
+                text = "Current Version: v${BuildConfig.VERSION_NAME} (Code ${BuildConfig.VERSION_CODE})",
+                style = MonoMetricStyle.copy(fontSize = MaterialTheme.typography.bodySmall.fontSize),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+              )
+              Text(
+                text = "Latest Config: v${remoteConfig.latestVersionName} (Code ${remoteConfig.latestVersionCode}) • ${remoteConfig.lastFetchStatus}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+              )
+              Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Button(
+                  onClick = onCheckUpdate,
+                  enabled = !isCheckingUpdate,
+                  modifier = Modifier
+                    .weight(1f)
+                    .testTag("check_update_button"),
+                ) {
+                  if (isCheckingUpdate) {
+                    CircularProgressIndicator(
+                      modifier = Modifier.size(16.dp),
+                      strokeWidth = 2.dp,
+                      color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Checking...")
+                  } else {
+                    Text("Check Update")
+                  }
+                }
+                OutlinedButton(
+                  onClick = onManualUpdate,
+                  modifier = Modifier
+                    .weight(1f)
+                    .testTag("manual_update_button"),
+                ) {
+                  Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = null, modifier = Modifier.size(16.dp))
+                  Spacer(modifier = Modifier.width(6.dp))
+                  Text("Manually Update")
+                }
+              }
+              if (BuildConfig.DEBUG) {
+                Row(
+                  modifier = Modifier.fillMaxWidth(),
+                  horizontalArrangement = Arrangement.SpaceBetween,
+                  verticalAlignment = Alignment.CenterVertically,
+                ) {
+                  Column(modifier = Modifier.weight(1f)) {
+                    Text("Use AdMob Test Banner ID", style = MaterialTheme.typography.titleSmall)
+                    Text(
+                      text = if (useTestAds) "Active: Test Banner (Debug)" else "Active: ${AdMobConfig.LIVE_BANNER_AD_UNIT_ID}",
+                      style = MaterialTheme.typography.bodySmall,
+                      color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                  }
+                  Switch(
+                    checked = useTestAds,
+                    onCheckedChange = onToggleTestAds,
+                    modifier = Modifier.testTag("toggle_test_ads_switch"),
+                  )
+                }
+              }
+            }
+          }
+        }
+
+        // Developer Details & Privacy Policy
+        item {
+          Card(
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+            modifier = Modifier.fillMaxWidth(),
+          ) {
+            Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+              Text("Developer & Legal", style = MaterialTheme.typography.titleMedium)
+              Text(
+                text = "Developed by ${DeveloperInfo.NAME} • ${DeveloperInfo.LOCATION}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+              )
+              Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                OutlinedButton(
+                  onClick = onOpenDeveloperDetails,
+                  modifier = Modifier
+                    .weight(1f)
+                    .testTag("open_developer_details_button"),
+                ) {
+                  Icon(Icons.Rounded.Person, contentDescription = null, modifier = Modifier.size(16.dp))
+                  Spacer(modifier = Modifier.width(6.dp))
+                  Text("Developer Details")
+                }
+                OutlinedButton(
+                  onClick = onOpenPrivacyPolicy,
+                  modifier = Modifier
+                    .weight(1f)
+                    .testTag("open_privacy_policy_button"),
+                ) {
+                  Icon(Icons.Rounded.PrivacyTip, contentDescription = null, modifier = Modifier.size(16.dp))
+                  Spacer(modifier = Modifier.width(6.dp))
+                  Text("Privacy Policy")
+                }
+              }
+            }
+          }
+        }
+
         // About FlashShare & Security
         item {
           Card(
@@ -473,10 +614,11 @@ fun SettingsScreen(
               Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Rounded.Security, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("About FlashShare v1.0.0", style = MaterialTheme.typography.titleMedium)
+                Text("Flash Share - Fast File Share v${BuildConfig.VERSION_NAME}", style = MaterialTheme.typography.titleMedium)
               }
               Text(
-                text = "• 100% Offline local Wi-Fi / Hotspot file sharing — zero cloud servers, zero ads.\n" +
+                text = "• Package: ${BuildConfig.APPLICATION_ID}\n" +
+                  "• 100% Offline local Wi-Fi / Hotspot file sharing — zero cloud file storage.\n" +
                   "• Local private IP enforcement (RFC1918/link-local only) & random session tokens.\n" +
                   "• Buffered direct streaming with SHA-256 verification — preserves original filename, extension, and quality.\n" +
                   "• Received APK/EXE installers are never executed automatically.",

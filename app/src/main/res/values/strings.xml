@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">FlashShare</string>
+    <string name="app_nickname">Flash Share - Fast File Share</string>
     <string name="notification_channel_name">File Transfers</string>
     <string name="notification_channel_description">Shows ongoing and completed offline file transfers</string>
+    <string name="admob_app_id">ca-app-pub-3181872815781744~9894324318</string>
 </resources>

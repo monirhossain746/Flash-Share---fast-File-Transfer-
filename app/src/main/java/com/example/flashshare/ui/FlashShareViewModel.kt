@@ -16,11 +16,14 @@ import com.example.flashshare.model.FileCategory
 import com.example.flashshare.model.IncomingTransferRequest
 import com.example.flashshare.model.NetworkInfoState
 import com.example.flashshare.model.ShareableFile
+import com.example.flashshare.ads.AdMobConfig
 import com.example.flashshare.model.ThemePreference
 import com.example.flashshare.model.TransferItem
 import com.example.flashshare.model.TransferStatus
 import com.example.flashshare.network.ParsedPairingQr
 import com.example.flashshare.network.QRCodeManager
+import com.example.flashshare.remote.AppControlConfig
+import com.example.flashshare.remote.UpdateCheckResult
 import com.example.flashshare.transfer.FlashShareContainer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -40,8 +43,12 @@ class FlashShareViewModel(application: Application) : AndroidViewModel(applicati
   private val history = container.transferHistory
   private val localServer = container.localServer
   private val settingsRepo = container.settingsRepository
+  private val remoteConfigManager = container.remoteConfigManager
 
   val settings: StateFlow<AppSettings> = settingsRepo.settings
+  val remoteConfig: StateFlow<AppControlConfig> = remoteConfigManager.config
+  val updateCheckState: StateFlow<UpdateCheckResult> = remoteConfigManager.updateCheckState
+  val useTestAds: StateFlow<Boolean> = AdMobConfig.useTestAds
   val networkState: StateFlow<NetworkInfoState> = networkManager.networkState
   val serverRunning: StateFlow<Boolean> = localServer.isRunning
   val activePort: StateFlow<Int> = localServer.activePort
@@ -84,6 +91,23 @@ class FlashShareViewModel(application: Application) : AndroidViewModel(applicati
   init {
     networkManager.startMonitoring()
     discovery.startScanning()
+    remoteConfigManager.fetchAndActivate()
+  }
+
+  fun refreshRemoteConfig() {
+    remoteConfigManager.fetchAndActivate()
+  }
+
+  fun checkForUpdatesNow() {
+    remoteConfigManager.checkForUpdatesNow()
+  }
+
+  fun clearUpdateCheckState() {
+    remoteConfigManager.clearUpdateCheckState()
+  }
+
+  fun setUseTestAds(enabled: Boolean) {
+    AdMobConfig.setUseTestAds(enabled)
   }
 
   override fun onCleared() {

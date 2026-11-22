@@ -14,3 +14,7 @@
 -keepclassmembers class * extends androidx.datastore.preferences.protobuf.GeneratedMessageLite {
     <fields>;
 }
+
+# Keep Google Mobile Ads & Firebase Remote Config metadata/callbacks
+-keep public class com.google.android.gms.ads.** { public *; }
+-keep class com.google.firebase.remoteconfig.** { *; }

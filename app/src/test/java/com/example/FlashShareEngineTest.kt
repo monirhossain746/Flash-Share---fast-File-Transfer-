@@ -1,6 +1,8 @@
 package com.example
 
+import com.example.flashshare.ads.AdMobConfig
 import com.example.flashshare.network.QRCodeManager
+import com.example.flashshare.remote.AppControlConfig
 import com.example.flashshare.util.Formatters
 import java.net.InetAddress
 import org.junit.Assert.assertEquals
@@ -60,5 +62,42 @@ class FlashShareEngineTest {
     assertEquals("192.168.1.15", parsed!!.ipAddress)
     assertEquals(9090, parsed.port)
     assertEquals("XYZ123", parsed.token)
+  }
+
+  @Test
+  fun `remote config force update triggers only when latest version is higher`() {
+    val noUpdate = AppControlConfig(forceUpdate = true, latestVersionCode = 1L)
+    assertFalse(noUpdate.isUpdateRequired(currentVersionCode = 1L))
+
+    val updateNeeded = AppControlConfig(forceUpdate = true, latestVersionCode = 2L)
+    assertTrue(updateNeeded.isUpdateRequired(currentVersionCode = 1L))
+
+    val optionalVersionBump = AppControlConfig(forceUpdate = false, latestVersionCode = 5L)
+    assertFalse(optionalVersionBump.isUpdateRequired(currentVersionCode = 1L))
+    assertTrue(optionalVersionBump.hasNewerVersion(currentVersionCode = 1L))
+  }
+
+  @Test
+  fun `remote config resolves apk download url or falls back to github`() {
+    val withApkUrl = AppControlConfig(
+      apkDownloadUrl = "https://github.com/monirhossain746/Flash-Share---fast-File-Transfer-/releases/latest/download/app-debug.apk",
+      updateUrl = AppControlConfig.DEFAULT_UPDATE_URL,
+    )
+    assertEquals(
+      "https://github.com/monirhossain746/Flash-Share---fast-File-Transfer-/releases/latest/download/app-debug.apk",
+      withApkUrl.resolvedUpdateUrl(),
+    )
+
+    val fallbackToGithub = AppControlConfig(apkDownloadUrl = "", updateUrl = "")
+    assertEquals(AppControlConfig.DEFAULT_UPDATE_URL, fallbackToGithub.resolvedUpdateUrl())
+  }
+
+  @Test
+  fun `admob config uses test id in debug when enabled and live id otherwise`() {
+    AdMobConfig.setUseTestAds(true)
+    assertEquals(AdMobConfig.TEST_BANNER_AD_UNIT_ID, AdMobConfig.activeBannerUnitId())
+    AdMobConfig.setUseTestAds(false)
+    assertEquals(AdMobConfig.LIVE_BANNER_AD_UNIT_ID, AdMobConfig.activeBannerUnitId())
+    AdMobConfig.setUseTestAds(true)
   }
 }
