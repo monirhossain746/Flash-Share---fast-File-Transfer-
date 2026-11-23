@@ -213,18 +213,6 @@ private fun FlashShareRoot(viewModel: FlashShareViewModel) {
     }
   }
 
-  fun openEmail(email: String) {
-    if (email.isBlank()) return
-    runCatching {
-      val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:$email")).apply {
-        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-      }
-      context.startActivity(intent)
-    }.onFailure {
-      viewModel.postMessage("No email app found. Contact: $email")
-    }
-  }
-
   LaunchedEffect(remoteConfig) {
     if (!autoUpdateConsumed &&
       !remoteConfig.appDisabled &&
@@ -528,7 +516,6 @@ private fun FlashShareRoot(viewModel: FlashShareViewModel) {
             composable(FlashRoutes.PRIVACY) {
               PrivacyPolicyScreen(
                 onOpenUrl = ::openExternalUrl,
-                onSendEmail = ::openEmail,
                 onBack = { navController.popBackStack() },
               )
             }

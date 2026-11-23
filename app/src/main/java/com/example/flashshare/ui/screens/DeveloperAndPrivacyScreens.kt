@@ -57,7 +57,6 @@ object DeveloperInfo {
   const val NAME = "Md. Monir Hossain"
   const val ROLE = "Web Developer, SEO Specialist & Graphic Designer"
   const val LOCATION = "Mymensingh, Bangladesh"
-  const val EMAIL = "Monirhossain6830@gmail.com"
   const val WEBSITE = "https://Monirhossain746.blogspot.com"
   const val GITHUB_URL = "https://github.com/monirhossain746/Flash-Share---fast-File-Transfer-"
 }
@@ -222,7 +221,6 @@ fun DeveloperDetailsScreen(
 @Composable
 fun PrivacyPolicyScreen(
   onOpenUrl: (String) -> Unit,
-  onSendEmail: (String) -> Unit,
   onBack: () -> Unit,
 ) {
   BackHandler(onBack = onBack)
@@ -348,24 +346,17 @@ fun PrivacyPolicyScreen(
               Text(
                 text = "If you have questions or requests regarding this Privacy Policy or Flash Share, contact the developer:\n" +
                   "• Developer: ${DeveloperInfo.NAME} (${DeveloperInfo.LOCATION})\n" +
-                  "• Email: ${DeveloperInfo.EMAIL}\n" +
                   "• Website: ${DeveloperInfo.WEBSITE}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
               )
-              Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                OutlinedButton(
-                  onClick = { onSendEmail(DeveloperInfo.EMAIL) },
-                  modifier = Modifier.weight(1f),
-                ) {
-                  Text("Email Developer")
-                }
-                Button(
-                  onClick = { onOpenUrl(DeveloperInfo.WEBSITE) },
-                  modifier = Modifier.weight(1f),
-                ) {
-                  Text("Visit Website")
-                }
+              Button(
+                onClick = { onOpenUrl(DeveloperInfo.WEBSITE) },
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .testTag("privacy_visit_website_button"),
+              ) {
+                Text("Visit Website")
               }
             }
           }
