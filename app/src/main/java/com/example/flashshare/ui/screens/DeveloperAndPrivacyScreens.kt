@@ -1,8 +1,5 @@
 package com.example.flashshare.ui.screens
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -26,8 +23,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.OpenInNew
 import androidx.compose.material.icons.rounded.Code
-import androidx.compose.material.icons.rounded.ContentCopy
-import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Person
@@ -51,7 +46,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -72,12 +66,9 @@ object DeveloperInfo {
 @Composable
 fun DeveloperDetailsScreen(
   onOpenUrl: (String) -> Unit,
-  onSendEmail: (String) -> Unit,
-  onShowMessage: (String) -> Unit,
   onBack: () -> Unit,
 ) {
   BackHandler(onBack = onBack)
-  val context = LocalContext.current
 
   Scaffold(
     topBar = {
@@ -191,39 +182,6 @@ fun DeveloperDetailsScreen(
           ) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
               Text("Contact & Portfolio", style = MaterialTheme.typography.titleMedium)
-
-              InfoRow(
-                icon = Icons.Rounded.Email,
-                label = "Email Address",
-                value = DeveloperInfo.EMAIL,
-              )
-
-              Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                OutlinedButton(
-                  onClick = {
-                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    clipboard.setPrimaryClip(ClipData.newPlainText("Developer Email", DeveloperInfo.EMAIL))
-                    onShowMessage("Copied ${DeveloperInfo.EMAIL}")
-                  },
-                  modifier = Modifier
-                    .weight(1f)
-                    .testTag("copy_developer_email_button"),
-                ) {
-                  Icon(Icons.Rounded.ContentCopy, contentDescription = null, modifier = Modifier.size(16.dp))
-                  Spacer(modifier = Modifier.width(6.dp))
-                  Text("Copy Email")
-                }
-                Button(
-                  onClick = { onSendEmail(DeveloperInfo.EMAIL) },
-                  modifier = Modifier
-                    .weight(1f)
-                    .testTag("email_developer_button"),
-                ) {
-                  Icon(Icons.Rounded.Email, contentDescription = null, modifier = Modifier.size(16.dp))
-                  Spacer(modifier = Modifier.width(6.dp))
-                  Text("Email")
-                }
-              }
 
               InfoRow(
                 icon = Icons.Rounded.Language,

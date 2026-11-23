@@ -524,8 +524,6 @@ private fun FlashShareRoot(viewModel: FlashShareViewModel) {
             composable(FlashRoutes.DEVELOPER) {
               DeveloperDetailsScreen(
                 onOpenUrl = ::openExternalUrl,
-                onSendEmail = ::openEmail,
-                onShowMessage = viewModel::postMessage,
                 onBack = { navController.popBackStack() },
               )
             }
