@@ -167,7 +167,6 @@ private fun FlashShareRoot(viewModel: FlashShareViewModel) {
   val settings by viewModel.settings.collectAsStateWithLifecycle()
   val remoteConfig by viewModel.remoteConfig.collectAsStateWithLifecycle()
   val updateCheckState by viewModel.updateCheckState.collectAsStateWithLifecycle()
-  val useTestAds by viewModel.useTestAds.collectAsStateWithLifecycle()
   val networkState by viewModel.networkState.collectAsStateWithLifecycle()
   val serverRunning by viewModel.serverRunning.collectAsStateWithLifecycle()
   val activePort by viewModel.activePort.collectAsStateWithLifecycle()
@@ -305,7 +304,7 @@ private fun FlashShareRoot(viewModel: FlashShareViewModel) {
     }
   }
 
-  val activeAdUnitId = remember(useTestAds) {
+  val activeAdUnitId = remember {
     AdMobConfig.activeBannerUnitId()
   }
 
@@ -494,7 +493,6 @@ private fun FlashShareRoot(viewModel: FlashShareViewModel) {
                 settings = settings,
                 remoteConfig = remoteConfig,
                 updateCheckState = updateCheckState,
-                useTestAds = useTestAds,
                 onUpdateDeviceName = {
                   viewModel.updateDeviceName(it)
                   viewModel.postMessage("Device settings updated")
@@ -511,7 +509,6 @@ private fun FlashShareRoot(viewModel: FlashShareViewModel) {
                 onManualUpdate = { openExternalUrl(DeveloperInfo.GITHUB_URL) },
                 onOpenDeveloperDetails = { navController.navigate(FlashRoutes.DEVELOPER) },
                 onOpenPrivacyPolicy = { navController.navigate(FlashRoutes.PRIVACY) },
-                onToggleTestAds = viewModel::setUseTestAds,
                 onClearAllHistory = {
                   viewModel.clearHistory(null)
                   viewModel.postMessage("Transfer history cleared")

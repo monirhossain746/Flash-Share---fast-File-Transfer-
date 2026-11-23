@@ -59,7 +59,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.example.BuildConfig
-import com.example.flashshare.ads.AdMobConfig
 import com.example.flashshare.model.AppSettings
 import com.example.flashshare.model.ConnectionTestResult
 import com.example.flashshare.model.DuplicateAction
@@ -255,7 +254,6 @@ fun SettingsScreen(
   settings: AppSettings,
   remoteConfig: AppControlConfig,
   updateCheckState: UpdateCheckResult,
-  useTestAds: Boolean,
   onUpdateDeviceName: (String) -> Unit,
   onUpdatePort: (String) -> Unit,
   onSetDownloadFolder: (Uri) -> Unit,
@@ -269,7 +267,6 @@ fun SettingsScreen(
   onManualUpdate: () -> Unit,
   onOpenDeveloperDetails: () -> Unit,
   onOpenPrivacyPolicy: () -> Unit,
-  onToggleTestAds: (Boolean) -> Unit,
   onClearAllHistory: () -> Unit,
   showBackButton: Boolean = true,
   onBack: () -> Unit,
@@ -536,27 +533,6 @@ fun SettingsScreen(
                   Icon(Icons.AutoMirrored.Rounded.OpenInNew, contentDescription = null, modifier = Modifier.size(16.dp))
                   Spacer(modifier = Modifier.width(6.dp))
                   Text("Manually Update")
-                }
-              }
-              if (BuildConfig.DEBUG) {
-                Row(
-                  modifier = Modifier.fillMaxWidth(),
-                  horizontalArrangement = Arrangement.SpaceBetween,
-                  verticalAlignment = Alignment.CenterVertically,
-                ) {
-                  Column(modifier = Modifier.weight(1f)) {
-                    Text("Use AdMob Test Banner ID", style = MaterialTheme.typography.titleSmall)
-                    Text(
-                      text = if (useTestAds) "Active: Test Banner (Debug)" else "Active: ${AdMobConfig.LIVE_BANNER_AD_UNIT_ID}",
-                      style = MaterialTheme.typography.bodySmall,
-                      color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                  }
-                  Switch(
-                    checked = useTestAds,
-                    onCheckedChange = onToggleTestAds,
-                    modifier = Modifier.testTag("toggle_test_ads_switch"),
-                  )
                 }
               }
             }

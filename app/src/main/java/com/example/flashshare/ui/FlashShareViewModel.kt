@@ -16,7 +16,6 @@ import com.example.flashshare.model.FileCategory
 import com.example.flashshare.model.IncomingTransferRequest
 import com.example.flashshare.model.NetworkInfoState
 import com.example.flashshare.model.ShareableFile
-import com.example.flashshare.ads.AdMobConfig
 import com.example.flashshare.model.ThemePreference
 import com.example.flashshare.model.TransferItem
 import com.example.flashshare.model.TransferStatus
@@ -48,7 +47,6 @@ class FlashShareViewModel(application: Application) : AndroidViewModel(applicati
   val settings: StateFlow<AppSettings> = settingsRepo.settings
   val remoteConfig: StateFlow<AppControlConfig> = remoteConfigManager.config
   val updateCheckState: StateFlow<UpdateCheckResult> = remoteConfigManager.updateCheckState
-  val useTestAds: StateFlow<Boolean> = AdMobConfig.useTestAds
   val networkState: StateFlow<NetworkInfoState> = networkManager.networkState
   val serverRunning: StateFlow<Boolean> = localServer.isRunning
   val activePort: StateFlow<Int> = localServer.activePort
@@ -104,10 +102,6 @@ class FlashShareViewModel(application: Application) : AndroidViewModel(applicati
 
   fun clearUpdateCheckState() {
     remoteConfigManager.clearUpdateCheckState()
-  }
-
-  fun setUseTestAds(enabled: Boolean) {
-    AdMobConfig.setUseTestAds(enabled)
   }
 
   override fun onCleared() {

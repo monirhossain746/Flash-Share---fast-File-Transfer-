@@ -27,7 +27,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.BuildConfig
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -43,7 +42,6 @@ object AdMobConfig {
   private const val TAG = "FlashShareAdMob"
 
   const val ADMOB_APP_ID = "ca-app-pub-3181872815781744~9894324318"
-  const val TEST_BANNER_AD_UNIT_ID = "ca-app-pub-3940256099942544/9214589741"
   const val LIVE_BANNER_AD_UNIT_ID = "ca-app-pub-3181872815781744/6198621889"
 
   private val initStarted = AtomicBoolean(false)
@@ -51,22 +49,7 @@ object AdMobConfig {
   private val _isSdkReady = MutableStateFlow(false)
   val isSdkReady: StateFlow<Boolean> = _isSdkReady.asStateFlow()
 
-  private val _useTestAds = MutableStateFlow(BuildConfig.DEBUG)
-  val useTestAds: StateFlow<Boolean> = _useTestAds.asStateFlow()
-
-  fun setUseTestAds(enabled: Boolean) {
-    if (BuildConfig.DEBUG) {
-      _useTestAds.value = enabled
-    }
-  }
-
-  fun activeBannerUnitId(): String {
-    return if (BuildConfig.DEBUG && _useTestAds.value) {
-      TEST_BANNER_AD_UNIT_ID
-    } else {
-      LIVE_BANNER_AD_UNIT_ID
-    }
-  }
+  fun activeBannerUnitId(): String = LIVE_BANNER_AD_UNIT_ID
 
   fun initialize(context: Context) {
     if (!initStarted.compareAndSet(false, true)) return

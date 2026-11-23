@@ -93,11 +93,9 @@ class FlashShareEngineTest {
   }
 
   @Test
-  fun `admob config uses test id in debug when enabled and live id otherwise`() {
-    AdMobConfig.setUseTestAds(true)
-    assertEquals(AdMobConfig.TEST_BANNER_AD_UNIT_ID, AdMobConfig.activeBannerUnitId())
-    AdMobConfig.setUseTestAds(false)
+  fun `admob config always returns live banner ad unit id`() {
+    assertEquals("ca-app-pub-3181872815781744~9894324318", AdMobConfig.ADMOB_APP_ID)
+    assertEquals("ca-app-pub-3181872815781744/6198621889", AdMobConfig.LIVE_BANNER_AD_UNIT_ID)
     assertEquals(AdMobConfig.LIVE_BANNER_AD_UNIT_ID, AdMobConfig.activeBannerUnitId())
-    AdMobConfig.setUseTestAds(true)
   }
 }
